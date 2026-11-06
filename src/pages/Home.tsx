@@ -66,7 +66,7 @@ export function Home() {
         <FadeIn delay={0.9} className="mt-3 font-cn text-base tracking-[0.6em] text-gold sm:text-lg">
           塔 罗 秘 仪
         </FadeIn>
-        <FadeIn delay={1.3} className="mx-auto mt-8 max-w-md px-2 font-serif text-lg italic leading-relaxed text-ink-dim sm:text-xl">
+        <FadeIn delay={1.3} className="mx-auto mt-8 max-w-md px-2 font-cn text-lg tracking-wider leading-relaxed text-ink-dim sm:text-xl">
           「星辰不会替你做决定，
           <br />
           但它们会为你照亮那条你早已知道的路。」

@@ -12,6 +12,8 @@ interface Props {
   liftIdx: MotionValue<number>;
   liftY: MotionValue<number>;
   origin: { x: number; y: number };
+  /** 预先栅格化的牌背图片 */
+  backUrl: string | null;
 }
 
 const easeOut = (t: number) => 1 - (1 - t) ** 3;
@@ -29,7 +31,7 @@ export function fanCardPose(geo: FanGeometry, index: number, total: number, o: n
 }
 
 /** 扇形中的一张牌，位置完全由 MotionValue 驱动，拖动牌扇时不触发 React 重渲染 */
-export const FanCard = memo(function FanCard({ index, total, geo, offset, progress, liftIdx, liftY, origin }: Props) {
+export const FanCard = memo(function FanCard({ index, total, geo, offset, progress, liftIdx, liftY, origin, backUrl }: Props) {
   const x = useTransform([offset, progress] as MotionValue<number>[], ([o, p]: number[]) => fanCardPose(geo, index, total, o, p, origin).x - geo.cardW / 2);
   const y = useTransform([offset, progress, liftIdx, liftY] as MotionValue<number>[], ([o, p, li, ly]: number[]) => {
     const pose = fanCardPose(geo, index, total, o, p, origin);
@@ -42,10 +44,14 @@ export const FanCard = memo(function FanCard({ index, total, geo, offset, progre
     <motion.div
       data-idx={index}
       className="absolute left-0 top-0 cursor-pointer select-none"
-      style={{ x, y, rotate, opacity, width: geo.cardW, height: geo.cardH, zIndex: index + 1, transformOrigin: '50% 60%' }}
+      style={{ x, y, rotate, opacity, width: geo.cardW, height: geo.cardH, zIndex: index + 1, transformOrigin: '50% 60%', willChange: 'transform' }}
     >
       <div className="hover-glow card-thickness h-full w-full overflow-hidden rounded-[7%/4.2%]">
-        <CardBack className="pointer-events-none block h-full w-full" />
+        {backUrl ? (
+          <img src={backUrl} alt="" draggable={false} className="pointer-events-none block h-full w-full select-none" />
+        ) : (
+          <CardBack className="pointer-events-none block h-full w-full" />
+        )}
       </div>
     </motion.div>
   );

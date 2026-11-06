@@ -9,6 +9,7 @@ import { navigate } from '../../lib/router';
 import { useApp, useMotionEnabled } from '../../store/AppStore';
 import type { Reading, SpreadId, TopicId } from '../../types/tarot';
 import { FlipCard } from '../cards/TarotCard';
+import { useCardBackImage } from '../cards/useCardBackImage';
 import { DeckStack } from './DeckStack';
 import { FanCard, fanCardPose } from './FanCard';
 import { CARD_RATIO, fanGeometry, headerHeight, isCompact, slotGeometry } from './layout';
@@ -41,6 +42,7 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
   const { w, h } = useViewport();
   const compact = isCompact(w);
 
+  const [backUrl, backProbe] = useCardBackImage(state.settings.theme);
   const [phase, setPhase] = useState<Phase>('intro');
   const [deck, setDeck] = useState<DeckState>(() => freshDeck());
   const [shuffleKey, setShuffleKey] = useState(0);
@@ -61,7 +63,7 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
   const footer = compact ? 96 : 110;
   const fan = useMemo(() => fanGeometry(w, h, TOTAL), [w, h]);
   const maxSlotW = compact ? (need === 1 ? 170 : 130) : need === 1 ? 230 : 180;
-  const pickGeo = useMemo(() => slotGeometry(spread, { x: 16, y: header + 6, w: w - 32, h: Math.max(140, fan.top - header - 18) }, maxSlotW * 0.62), [spread, w, header, fan.top, maxSlotW]);
+  const pickGeo = useMemo(() => slotGeometry(spread, { x: 16, y: header + 6, w: w - 32, h: Math.max(140, fan.top - header - 18 - 40) }, maxSlotW * 0.62), [spread, w, header, fan.top, maxSlotW]);
   const finalGeo = useMemo(() => slotGeometry(spread, { x: 16, y: header + 4, w: w - 32, h: h - header - footer }, maxSlotW), [spread, w, h, header, footer, maxSlotW]);
   const deckPos = useMemo(() => ({ x: w / 2, y: header + (fan.top - header) / 2 + 10 }), [w, header, fan.top]);
   const deckW = Math.min(compact ? 92 : 120, (fan.top - header) / CARD_RATIO / 1.5);
@@ -232,6 +234,9 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
     return () => window.clearTimeout(t);
   }, [phase, readingId, fast]);
 
+  /** 该位置是否被下一张横置的牌压住（凯尔特十字第 1 张） */
+  const crossedBy = (k: number) => !!spread.positions[k + 1]?.rotate && spread.positions[k + 1].x === spread.positions[k].x && spread.positions[k + 1].y === spread.positions[k].y;
+
   // ---------- 文案 ----------
   const instruction: Record<Phase, string> = {
     intro: deck.shuffleCount === 0 ? '静心默念你的问题，然后轻触牌堆开始洗牌' : `已洗牌 ${deck.shuffleCount} 次 · 可继续洗牌，或开始切牌`,
@@ -254,6 +259,7 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
 
   return (
     <div className="fixed inset-0 z-30 overflow-hidden" style={{ touchAction: phase === 'picking' ? 'none' : 'auto' }}>
+      {backProbe}
       {/* 背景变暗 + 聚光 */}
       <motion.div
         className="pointer-events-none absolute inset-0"
@@ -325,7 +331,7 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
           pickGeo.slots.map((s, k) => (
             <motion.div
               key={`slot-${k}`}
-              className="pointer-events-none absolute left-0 top-0 flex items-center justify-center rounded-[7%/4.2%] border border-dashed border-[var(--gold)]/45 bg-[color-mix(in_srgb,var(--gold)_5%,transparent)]"
+              className={`pointer-events-none absolute left-0 top-0 flex justify-center rounded-[7%/4.2%] border border-dashed border-[var(--gold)]/45 bg-[color-mix(in_srgb,var(--gold)_5%,transparent)] ${crossedBy(k) ? 'items-start pt-1' : 'items-center'}`}
               style={{ width: pickGeo.cardW, height: pickGeo.cardW * CARD_RATIO, x: s.x - pickGeo.cardW / 2, y: s.y - (pickGeo.cardW * CARD_RATIO) / 2, rotate: s.rotate }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: k === picked.length && phase === 'picking' ? [0.5, 1, 0.5] : 0.6, scale: 1 }}
@@ -353,7 +359,7 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
           <div className="absolute left-0" style={{ top: -(fan.top - 30), width: w, height: h }}>
             {Array.from({ length: TOTAL }).map((_, i) =>
               pickedSet.has(i) ? null : (
-                <FanCard key={i} index={i} total={TOTAL} geo={fan} offset={offset} progress={progress} liftIdx={liftIdx} liftY={liftY} origin={fanOrigin} />
+                <FanCard key={i} index={i} total={TOTAL} geo={fan} offset={offset} progress={progress} liftIdx={liftIdx} liftY={liftY} origin={fanOrigin} backUrl={backUrl} />
               ),
             )}
           </div>
@@ -370,7 +376,8 @@ export function DrawScene({ topic, spreadId, question }: { topic: TopicId; sprea
         return (
           <motion.div
             key={`picked-${p.deckIndex}`}
-            className="absolute left-0 top-0"
+            // 横置的牌（凯尔特十字第 2 张）在第 1 张翻开前不拦截点击，保证被压住的牌可以先翻开
+            className={`absolute left-0 top-0 ${spread.positions[k].rotate && k > 0 && !revealed[k - 1] ? 'pointer-events-none' : ''}`}
             style={{ width: baseW, height: baseW * CARD_RATIO, zIndex: 200 + k }}
             initial={{ x: p.from.x - baseW / 2, y: p.from.y - (baseW * CARD_RATIO) / 2, rotate: p.from.rotate, scale: fan.cardW / baseW }}
             animate={{ x: s.x - baseW / 2, y: s.y - (baseW * CARD_RATIO) / 2, rotate: s.rotate, scale }}

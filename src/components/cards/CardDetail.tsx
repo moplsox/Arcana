@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Heart, RotateCcw, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ELEMENT_NAMES, SUITS, cardNumeral } from '../../data/deck';
 import { useApp } from '../../store/AppStore';
 import { useToast } from '../../lib/toast';
@@ -33,7 +34,8 @@ export function CardDetail({ card, initialReversed = false, onClose }: { card: T
     };
   }, [card, onClose]);
 
-  return (
+  // 通过 portal 渲染到 body，避免被页面容器的层叠上下文压在底部导航之下
+  return createPortal(
     <AnimatePresence>
       {card && (
         <motion.div className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -115,6 +117,7 @@ export function CardDetail({ card, initialReversed = false, onClose }: { card: T
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }

@@ -128,7 +128,7 @@ export function Result({ id }: { id: string }) {
           <span className="chip">{date.toLocaleString('zh-CN', { hour12: false, month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
           <span className="chip border-[var(--gold)]! text-gold!">{it.trendLabel}</span>
         </div>
-        {reading.question && <p className="mx-auto mt-4 max-w-lg font-serif text-lg italic text-ink">「{reading.question}」</p>}
+        {reading.question && <p className="mx-auto mt-4 max-w-lg font-cn text-lg tracking-wider text-ink">「{reading.question}」</p>}
       </FadeIn>
 
       {/* 牌阵 */}
@@ -254,7 +254,7 @@ export function Result({ id }: { id: string }) {
             <div className="rounded-xl border border-[var(--panel-border)] p-3"><div className="text-[11px] text-ink-dim">今日箴言</div><div className="mt-1 text-sm text-gold">{it.daily.mantra}</div></div>
           </div>
         )}
-        <p className="mt-5 border-t border-[var(--panel-border)] pt-4 text-center font-serif text-lg italic text-gold-bright">「{it.finalAdvice}」</p>
+        <p className="mt-5 border-t border-[var(--panel-border)] pt-4 text-center font-cn text-lg tracking-wider text-gold-bright">「{it.finalAdvice}」</p>
       </Block>
 
       {/* AI 深度解读 */}
