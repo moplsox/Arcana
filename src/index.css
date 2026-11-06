@@ -1,0 +1,314 @@
+@import 'tailwindcss';
+
+/* ---------- 主题：通过 data-theme 切换 CSS 变量 ---------- */
+:root,
+:root[data-theme='midnight'] {
+  --bg-0: #07060f;
+  --bg-1: #120c26;
+  --bg-2: #1d1440;
+  --nebula-a: rgba(108, 62, 196, 0.32);
+  --nebula-b: rgba(36, 72, 160, 0.26);
+  --gold: #e2c27a;
+  --gold-bright: #fbe6ac;
+  --gold-deep: #a9813a;
+  --ink: #ece4d4;
+  --ink-dim: #b3a8c9;
+  --ink-faint: #7b7196;
+  --panel: rgba(22, 16, 44, 0.62);
+  --panel-border: rgba(226, 194, 122, 0.22);
+  --glow: rgba(240, 205, 128, 0.55);
+  --card-back-0: #2d1d55;
+  --card-back-1: #0b0718;
+  --accent: #a98be8;
+  color-scheme: dark;
+}
+
+:root[data-theme='abyss'] {
+  --bg-0: #03070d;
+  --bg-1: #071628;
+  --bg-2: #0b2440;
+  --nebula-a: rgba(30, 110, 170, 0.3);
+  --nebula-b: rgba(20, 160, 160, 0.18);
+  --gold: #cfd8e6;
+  --gold-bright: #f3f7ff;
+  --gold-deep: #8796ad;
+  --ink: #e6edf5;
+  --ink-dim: #a6b6c8;
+  --ink-faint: #6c7d92;
+  --panel: rgba(8, 22, 40, 0.62);
+  --panel-border: rgba(190, 210, 235, 0.22);
+  --glow: rgba(170, 210, 255, 0.5);
+  --card-back-0: #12325a;
+  --card-back-1: #040a14;
+  --accent: #6fc3e0;
+}
+
+:root[data-theme='crimson'] {
+  --bg-0: #0a0507;
+  --bg-1: #1d0a10;
+  --bg-2: #33101c;
+  --nebula-a: rgba(170, 30, 60, 0.3);
+  --nebula-b: rgba(120, 40, 120, 0.22);
+  --gold: #e7b77a;
+  --gold-bright: #ffdcae;
+  --gold-deep: #a26a33;
+  --ink: #f1e2da;
+  --ink-dim: #c7a9a9;
+  --ink-faint: #8d6c72;
+  --panel: rgba(36, 10, 18, 0.62);
+  --panel-border: rgba(231, 183, 122, 0.22);
+  --glow: rgba(255, 160, 120, 0.5);
+  --card-back-0: #4d1426;
+  --card-back-1: #12040a;
+  --accent: #e0607a;
+}
+
+@theme inline {
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-deep: var(--gold-deep);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+  --color-abyss: var(--bg-0);
+  --color-night: var(--bg-1);
+  --color-dusk: var(--bg-2);
+  --color-panel: var(--panel);
+  --color-accent: var(--accent);
+  --font-display: 'Cinzel', 'Noto Serif SC', serif;
+  --font-serif: 'Cormorant Garamond', 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+  --font-cn: 'Noto Serif SC', 'Songti SC', 'STSong', serif;
+}
+
+html {
+  background: var(--bg-0);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg-0);
+  color: var(--ink);
+  font-family: var(--font-cn);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--gold) 35%, transparent);
+}
+
+/* ---------- 复用样式 ---------- */
+@layer components {
+  .text-gold-gradient {
+    background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 45%, var(--gold-deep) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .divider-ornament {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--gold);
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  }
+
+  .btn-arcane {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem 2.2rem;
+    border-radius: 999px;
+    font-family: var(--font-cn);
+    letter-spacing: 0.25em;
+    color: #1b1206;
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold) 55%, var(--gold-deep));
+    box-shadow: 0 0 0 1px rgba(255, 240, 200, 0.4) inset, 0 6px 30px var(--glow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn-arcane:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(255, 240, 200, 0.6) inset, 0 10px 44px var(--glow);
+    filter: brightness(1.06);
+  }
+  .btn-arcane:active {
+    transform: translateY(0) scale(0.98);
+  }
+  .btn-arcane:disabled {
+    filter: grayscale(0.6) brightness(0.7);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    color: var(--gold);
+    border: 1px solid var(--panel-border);
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+  }
+  .btn-ghost:hover {
+    border-color: var(--gold);
+    background: color-mix(in srgb, var(--gold) 10%, transparent);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--gold) 25%, transparent);
+  }
+  .btn-ghost[aria-pressed='true'] {
+    background: color-mix(in srgb, var(--gold) 18%, transparent);
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    border: 1px solid var(--panel-border);
+    color: var(--ink-dim);
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+/* ---------- 卡牌 3D ---------- */
+.card-3d {
+  transform-style: preserve-3d;
+}
+.card-face-wrap {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 7%/4.2%;
+  overflow: hidden;
+}
+.card-face-wrap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* 真实厚度感：多层错位边缘 + 投影 */
+.card-thickness {
+  box-shadow:
+    1px 1px 0 #8c6a2e,
+    2px 2px 0 #6e521f,
+    3px 3px 0 #4a3714,
+    0 14px 28px rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.hover-glow {
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease;
+}
+@media (hover: hover) {
+  .hover-glow:hover {
+    transform: translateY(-14px) scale(1.04);
+    box-shadow:
+      0 0 0 1px var(--gold),
+      0 0 26px 4px var(--glow),
+      0 18px 34px rgba(0, 0, 0, 0.6);
+    filter: brightness(1.08);
+  }
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* 扇形中被悬停的牌浮到最上层 */
+@media (hover: hover) {
+  [data-idx]:has(.hover-glow:hover) {
+    z-index: 150 !important;
+  }
+}
+
+/* 尊重系统的减少动态效果设置 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 用户在设置中关闭动效 */
+:root[data-motion='reduced'] .magic-spin {
+  animation: none !important;
+}
+
+@keyframes magic-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes magic-spin-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.magic-spin {
+  animation: magic-spin 120s linear infinite;
+  transform-origin: center;
+}
+.magic-spin-rev {
+  animation: magic-spin-rev 90s linear infinite;
+  transform-origin: center;
+}
+.breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+.shimmer-text {
+  background: linear-gradient(90deg, var(--gold-deep) 0%, var(--gold-bright) 25%, var(--gold) 50%, var(--gold-bright) 75%, var(--gold-deep) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 8s linear infinite;
+}

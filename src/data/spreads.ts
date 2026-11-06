@@ -33,11 +33,11 @@ export const SPREADS: Record<SpreadId, Spread> = {
     description: '五张牌映照你与对方的心意、阻碍与未来。',
     suitableFor: '恋爱 · 暧昧 · 婚姻 · 复合',
     positions: [
-      { key: 'me', label: '我的感情状态', meaning: '你在这段关系中的真实状态与需求', x: -1.3, y: -0.05, lens: 'self' },
-      { key: 'partner', label: '对方的真实想法', meaning: '对方内心对你和这段关系的态度', x: 1.3, y: -0.05, lens: 'other' },
-      { key: 'obstacle', label: '关系的阻碍', meaning: '横亘在你们之间的问题或挑战', x: 0, y: 0.15, lens: 'obstacle' },
-      { key: 'future', label: '未来发展', meaning: '这段关系接下来的走向', x: 0, y: -1.05, lens: 'future' },
-      { key: 'advice', label: '最终建议', meaning: '塔罗给你的行动建议', x: 0, y: 1.35, lens: 'advice' },
+      { key: 'me', label: '我的感情状态', meaning: '你在这段关系中的真实状态与需求', x: -1.3, y: 0.12, lens: 'self' },
+      { key: 'partner', label: '对方的真实想法', meaning: '对方内心对你和这段关系的态度', x: 1.3, y: 0.12, lens: 'other' },
+      { key: 'obstacle', label: '关系的阻碍', meaning: '横亘在你们之间的问题或挑战', x: 0, y: 0.12, lens: 'obstacle' },
+      { key: 'future', label: '未来发展', meaning: '这段关系接下来的走向', x: 0, y: -1.22, lens: 'future' },
+      { key: 'advice', label: '最终建议', meaning: '塔罗给你的行动建议', x: 0, y: 1.46, lens: 'advice' },
     ],
   },
   celtic: {
