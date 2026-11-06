@@ -2,17 +2,36 @@
 
 一个沉浸式的塔罗牌占卜网页游戏：暗黑奇幻 × 神秘学视觉风格，完整 78 张牌、四种经典牌阵、可交互的洗牌 / 切牌 / 抽牌 / 翻牌流程，以及本地运行的中文解读引擎。
 
-## 快速开始
+## 在线访问（GitHub Pages，无需本地启动）
+
+仓库内置 `.github/workflows/deploy.yml`：每次推送到 `main` 或 `claude/arcana-tarot-game` 分支时，GitHub Actions 会自动测试、构建，并把 `dist/` 发布到 `gh-pages` 分支。
+
+首次使用只需在 GitHub 上设置一次：
+
+1. 打开仓库 **Settings → Pages**
+2. **Source** 选择 **Deploy from a branch**，分支选 **`gh-pages`**，目录选 **`/ (root)`**，保存
+3. 等待一两分钟后访问：**https://moplsox.github.io/Arcana/**
+
+> 若 Actions 页面没有运行记录，可在 **Actions → Deploy to GitHub Pages → Run workflow** 手动触发一次。
+> 私有仓库使用 GitHub Pages 需要付费方案；公开仓库免费。
+
+## 本地运行
 
 ```bash
 npm install
-npm run dev        # 开发服务器 http://localhost:5173
-npm run build      # 类型检查 + 生产构建，输出到 dist/
-npm run preview    # 预览生产构建
-npm test           # 运行引擎单元测试
+
+# 方式一：生产构建 + 静态预览（推荐，启动快、加载快）
+npm run build && npm run preview   # http://localhost:4173
+
+# 方式二：开发服务器（带热更新，首次加载较慢，适合改代码时用）
+npm run dev                        # http://localhost:5173
+
+npm test                           # 运行引擎单元测试
 ```
 
-使用哈希路由（`#/result/...`），`dist/` 可直接部署到任何静态托管（GitHub Pages、Netlify、本地文件服务器等）。
+开发服务器会在浏览器首次请求时按需转译每个模块，并逐个加载上百个字体分片，所以第一次打开较慢；`npm run preview` 直接提供打包好的文件，速度快得多。
+
+使用哈希路由（`#/result/...`）与相对路径，`dist/` 可直接部署到任何静态托管（GitHub Pages、Netlify、Vercel、Nginx 等）。
 
 ## 功能
 
